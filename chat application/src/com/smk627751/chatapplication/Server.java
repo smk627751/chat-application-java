@@ -7,10 +7,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Server {
 	private static ServerSocket s;
-	private static ArrayList<Socket> sockets = new ArrayList<>();
+	private static HashMap<String,Socket> socketsMap = new HashMap<>();
 	public static void main(String[] args) {
 		try {
 			ServerSocket s = new ServerSocket(5000);
@@ -18,7 +19,11 @@ public class Server {
 			{
 				try {
 					Socket socket = s.accept();
-					sockets.add(socket);
+					DataInputStream getName = new DataInputStream(socket.getInputStream());
+					String name = getName.readUTF();
+
+					socketsMap.put(name, socket);
+
 					Thread thread = new Thread() {
 						public void run()
 						{
@@ -56,12 +61,13 @@ public class Server {
 
 	private static void broadCastMessage(Socket sender,String str) throws IOException
 	{
-		for(Socket socket : sockets)
+		String[] messageData = str.split(",");
+		for(Map.Entry<String, Socket> socket : socketsMap.entrySet())
 		{
-			if(socket != sender)
+			if(socket.getValue() != sender && socket.getKey().equals(messageData[1]))
 			{
-				DataOutputStream dout = new DataOutputStream(socket.getOutputStream());
-				dout.writeUTF(str);
+				DataOutputStream dout = new DataOutputStream(socket.getValue().getOutputStream());
+				dout.writeUTF(messageData[0]+":"+messageData[2]);
 			}
 		}
 	}

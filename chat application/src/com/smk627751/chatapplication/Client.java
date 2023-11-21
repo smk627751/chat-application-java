@@ -35,10 +35,13 @@ public class Client {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter your name:");
 		String name = sc.nextLine();
+		System.out.println("to:");
+		String to = sc.nextLine();
 		try {
 			Socket socket = new Socket(HOST,PORT);
 			DataInputStream dis = new DataInputStream(socket.getInputStream());
 			DataOutputStream dout = new DataOutputStream(socket.getOutputStream());
+			dout.writeUTF(name);
 			Thread thread = new Thread(){
 				public void run()
 				{
@@ -58,7 +61,7 @@ public class Client {
 			while(true){
 					String msg = sc.nextLine();
 					chatBubble("sent",msg);
-					dout.writeUTF(name+": "+msg);
+					dout.writeUTF(name+","+to+","+msg);
 			}
 		}
 		catch(Exception e)
