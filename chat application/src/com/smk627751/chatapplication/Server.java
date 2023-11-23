@@ -64,7 +64,7 @@ public class Server {
 		String[] messageData = str.split(",");
 		for(Map.Entry<String, Socket> socket : socketsMap.entrySet())
 		{
-			if(socket.getValue() != sender && socket.getKey().equals(messageData[1]))
+			if(socket.getValue() != sender && socket.getKey().equals(messageData[1]) || messageData[1].equals("all"))
 			{
 				DataOutputStream dout = new DataOutputStream(socket.getValue().getOutputStream());
 				dout.writeUTF(messageData[0]+":"+messageData[2]);
