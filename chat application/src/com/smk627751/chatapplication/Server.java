@@ -51,7 +51,7 @@ public class Server {
 			{
 				str = dis.readUTF();
 				System.out.println(str);
-				broadCastMessage(socket,str);
+				sendMessage(socket,str);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -59,7 +59,7 @@ public class Server {
 		}
 	}
 
-	private static void broadCastMessage(Socket sender,String str) throws IOException
+	private static void sendMessage(Socket sender,String str) throws IOException
 	{
 		String[] messageData = str.split(",");
 		for(Map.Entry<String, Socket> socket : socketsMap.entrySet())
